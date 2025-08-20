@@ -3,6 +3,7 @@ const path = require('path');
 const cors = require('cors');
 const QRcode = require('qrcode');
 const nodemailer = require('nodemailer');
+require('dotenv').config();
 
 const app = express();
 const fs = require('fs');
@@ -51,19 +52,21 @@ app.post('/api/reservar', (req, res) => {
 
     newOrder.status= '未';
     // newOrder.payment = '未';
-    console.log(newOrder);
+
     json.orders.push(newOrder);
 
     fs.writeFile(orderPath, JSON.stringify(json, null, 2), (err) => {
       if (err) return res.status(500).json({ error: 'Erro ao salvar dados no arquivo json.'})
-    
+
       //Configurar e-mail
       const transporter = nodemailer.createTransport({
-        service: 'gmail',
+        host: "smtp.gmail.com",
+        port: 465,       // 465 -> SSL
+        secure: true,    // true para 465
         auth: {
-          user: process.env.EMAIL_USER,
-          pass: process.env.EMAIL_PASS,
-        },
+          user: process.env.EMAIL_USER, // seu email
+          pass: process.env.EMAIL_PASS  // senha de app
+        }
       });
 
       //Qr Code
@@ -78,20 +81,22 @@ app.post('/api/reservar', (req, res) => {
           <p>注文番号: <strong>${newOrder.id_order}</strong></p>
           <p>お名前: ${newOrder.first_name} ${newOrder.last_name}</p>
           <p>電話番号: ${newOrder.tel}</p>
-          <p>受け取り日時: ${newOrder.date} - ${newOrder.hour}</p>
+          <p>受け取り日時: ${newOrder.date} - ${newOrder.pickupHour}</p>
+          <p>その他: ${newOrder.message} </p>
           <p></p>
           <p>ご注文内容:</p>
           <ul>
-            ${newOrder.cakes.map(c => `<li>${c.name} - ${c.amount}個</li>`).join('')}
+            ${newOrder.cakes.map(c => `<li>${c.name} - ${c.size} - ${c.amount}個</li>`).join('')}
           </ul>
+          <p></p>
           <p>こちらが受付用QRコードです:</p>
-          <img src="cid:qrcode" alt="QRコード" width="200" />
+          <img src="cid:qrcode" alt="QRコード" width="400" />
           <p>またのご利用をお待ちしております。</p>
         `;
 
         const mailOptions = {
           from: `"Pâtisserie Cake" <${process.env.EMAIL_USER}>`,
-          to: newOrder.email,
+          to: [newOrder.email, process.env.EMAIL_USER], // manda para o cliente E para você
           subject: `🎂 ご注文確認 - 注文番号 ${newOrder.id_order}`,
           html: htmlContent,
           attachments: [
@@ -104,11 +109,18 @@ app.post('/api/reservar', (req, res) => {
           ],
         };
 
-        
+        transporter.sendMail(mailOptions, (error, info) => {
+          if (error) {
+            console.log('Erro ao Enviar e-mail:', error);
+            return res.json({ success: true, id: newOrder.id_order, emailSent: false });
+          }
+          console.log('E-mail enviado com QR Code!');
+          res.json({ success: true, id:newOrder.id_order, emailSent: true });
+        });
 
-      })
-    })
-  })
+      });
+    });
+  });
 });
 
 //atualiza status
