@@ -124,7 +124,7 @@ app.post('/api/reservar', (req, res) => {
 });
 
 //atualiza status
-app.put('/api/reservar/:id_order', (req, ser) => {
+app.put('/api/reservar/:id_order', (req, res) => {
   console.log('/api/reservar/:id_order')
 });
 
