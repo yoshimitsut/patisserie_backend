@@ -14,8 +14,7 @@
           "id_cake": 5,
           "name": "ノエルレア",
           "size": [
-            "１６cm x １１cm ￥４,６００",
-            "１４cm x １４cm ￥４,６００"
+            "１６cm x １１cm ￥４,６００"
           ],
           "quantity": 5,
           "image": "../image/ノエルレア.jpg",
@@ -23,7 +22,7 @@
         }
       ],
       "id_order": 1,
-      "status": "未"
+      "status": "1"
     },
     {
       "id_client": "2002",
@@ -39,7 +38,6 @@
           "id_cake": 5,
           "name": "ノエルレア",
           "size": [
-            "１６cm x １１cm ￥４,６００",
             "１４cm x １４cm ￥４,６００"
           ],
           "quantity": 5,
@@ -48,7 +46,7 @@
         }
       ],
       "id_order": 2,
-      "status": "未"
+      "status": "3"
     },
     {
       "id_client": "2003",
@@ -72,7 +70,7 @@
         }
       ],
       "id_order": 3,
-      "status": "未"
+      "status": "2"
     },
     {
       "id_client": "2004",
@@ -96,7 +94,7 @@
         }
       ],
       "id_order": 4,
-      "status": "未"
+      "status": "4"
     },
     {
       "id_client": "2005",
@@ -120,7 +118,7 @@
         }
       ],
       "id_order": 5,
-      "status": "未"
+      "status": "1"
     },
     {
       "id_client": "2006",
@@ -144,7 +142,7 @@
         }
       ],
       "id_order": 6,
-      "status": "未"
+      "status": "1"
     },
     {
       "id_client": "2007",
@@ -168,7 +166,7 @@
         }
       ],
       "id_order": 7,
-      "status": "未"
+      "status": "1"
     },
     {
       "id_client": "2008",
@@ -192,7 +190,7 @@
         }
       ],
       "id_order": 8,
-      "status": "未"
+      "status": "1"
     },
     {
       "id_client": "2009",
@@ -208,8 +206,6 @@
           "id_cake": 1,
           "name": "ノエルフレーズ",
           "size": [
-            "４号 ￥３,７００",
-            "５号 ￥４,６００",
             "６号 ￥５,６００"
           ],
           "quantity": 10,
@@ -218,7 +214,7 @@
         }
       ],
       "id_order": 9,
-      "status": "未"
+      "status": "1"
     },
     {
       "id_client": "2010",
@@ -242,7 +238,7 @@
         }
       ],
       "id_order": 10,
-      "status": "未"
+      "status": "1"
     },
     {
       "id_client": "2011",
@@ -258,7 +254,6 @@
           "id_cake": 5,
           "name": "ノエルレア",
           "size": [
-            "１６cm x １１cm ￥４,６００",
             "１４cm x １４cm ￥４,６００"
           ],
           "quantity": 5,
@@ -267,7 +262,7 @@
         }
       ],
       "id_order": 11,
-      "status": "未"
+      "status": "1"
     },
     {
       "id_client": "2012",
@@ -291,7 +286,7 @@
         }
       ],
       "id_order": 12,
-      "status": "未"
+      "status": "1"
     },
     {
       "id_client": "2013",
@@ -307,7 +302,6 @@
           "id_cake": 5,
           "name": "ノエルレア",
           "size": [
-            "１６cm x １１cm ￥４,６００",
             "１４cm x １４cm ￥４,６００"
           ],
           "quantity": 5,
@@ -316,7 +310,7 @@
         }
       ],
       "id_order": 13,
-      "status": "未"
+      "status": "1"
     },
     {
       "id_client": "2014",
@@ -340,7 +334,7 @@
         }
       ],
       "id_order": 14,
-      "status": "未"
+      "status": "1"
     },
     {
       "id_client": "2015",
@@ -364,7 +358,7 @@
         }
       ],
       "id_order": 15,
-      "status": "未"
+      "status": "1"
     },
     {
       "id_client": "2016",
@@ -388,7 +382,7 @@
         }
       ],
       "id_order": 16,
-      "status": "未"
+      "status": "1"
     },
     {
       "id_client": "2017",
@@ -412,7 +406,7 @@
         }
       ],
       "id_order": 17,
-      "status": "未"
+      "status": "1"
     },
     {
       "id_client": "2018",
@@ -436,7 +430,7 @@
         }
       ],
       "id_order": 18,
-      "status": "未"
+      "status": "1"
     },
     {
       "id_client": "2019",
@@ -460,7 +454,7 @@
         }
       ],
       "id_order": 19,
-      "status": "未"
+      "status": "1"
     },
     {
       "id_client": "2020",
@@ -476,8 +470,6 @@
           "id_cake": 2,
           "name": "ノエルショコラ",
           "size": [
-            "４号 ￥３,９００",
-            "５号 ￥４,８００",
             "６号 ￥５,８００"
           ],
           "quantity": 5,
@@ -486,7 +478,7 @@
         }
       ],
       "id_order": 20,
-      "status": "未"
+      "status": "1"
     },
     {
       "id_client": "2021",
@@ -502,7 +494,6 @@
           "id_cake": 5,
           "name": "ノエルレア",
           "size": [
-            "１６cm x １１cm ￥４,６００",
             "１４cm x １４cm ￥４,６００"
           ],
           "quantity": 5,
@@ -511,7 +502,7 @@
         }
       ],
       "id_order": 21,
-      "status": "未"
+      "status": "1"
     },
     {
       "id_client": "2022",
@@ -535,7 +526,7 @@
         }
       ],
       "id_order": 22,
-      "status": "未"
+      "status": "1"
     },
     {
       "id_client": "2023",
@@ -559,7 +550,7 @@
         }
       ],
       "id_order": 23,
-      "status": "未"
+      "status": "1"
     },
     {
       "id_client": "2024",
@@ -583,7 +574,7 @@
         }
       ],
       "id_order": 24,
-      "status": "未"
+      "status": "1"
     },
     {
       "id_client": "2025",
@@ -599,8 +590,6 @@
           "id_cake": 2,
           "name": "ノエルショコラ",
           "size": [
-            "４号 ￥３,９００",
-            "５号 ￥４,８００",
             "６号 ￥５,８００"
           ],
           "quantity": 5,
@@ -609,7 +598,7 @@
         }
       ],
       "id_order": 25,
-      "status": "未"
+      "status": "1"
     },
     {
       "id_client": "2026",
@@ -625,8 +614,6 @@
           "id_cake": 2,
           "name": "ノエルショコラ",
           "size": [
-            "４号 ￥３,９００",
-            "５号 ￥４,８００",
             "６号 ￥５,８００"
           ],
           "quantity": 5,
@@ -635,7 +622,7 @@
         }
       ],
       "id_order": 26,
-      "status": "未"
+      "status": "1"
     },
     {
       "id_client": "2027",
@@ -659,7 +646,7 @@
         }
       ],
       "id_order": 27,
-      "status": "未"
+      "status": "1"
     },
     {
       "id_client": "2028",
@@ -683,7 +670,7 @@
         }
       ],
       "id_order": 28,
-      "status": "未"
+      "status": "1"
     },
     {
       "id_client": "2029",
@@ -707,7 +694,7 @@
         }
       ],
       "id_order": 29,
-      "status": "未"
+      "status": "1"
     },
     {
       "id_client": "2030",
@@ -723,8 +710,6 @@
           "id_cake": 2,
           "name": "ノエルショコラ",
           "size": [
-            "４号 ￥３,９００",
-            "５号 ￥４,８００",
             "６号 ￥５,８００"
           ],
           "quantity": 5,
@@ -733,7 +718,7 @@
         }
       ],
       "id_order": 30,
-      "status": "未"
+      "status": "1"
     },
     {
       "id_client": "2031",
@@ -749,7 +734,6 @@
           "id_cake": 5,
           "name": "ノエルレア",
           "size": [
-            "１６cm x １１cm ￥４,６００",
             "１４cm x １４cm ￥４,６００"
           ],
           "quantity": 5,
@@ -758,7 +742,7 @@
         }
       ],
       "id_order": 31,
-      "status": "未"
+      "status": "1"
     },
     {
       "id_client": "2032",
@@ -782,7 +766,7 @@
         }
       ],
       "id_order": 32,
-      "status": "未"
+      "status": "1"
     },
     {
       "id_client": "2033",
@@ -798,7 +782,6 @@
           "id_cake": 5,
           "name": "ノエルレア",
           "size": [
-            "１６cm x １１cm ￥４,６００",
             "１４cm x １４cm ￥４,６００"
           ],
           "quantity": 5,
@@ -807,7 +790,7 @@
         }
       ],
       "id_order": 33,
-      "status": "未"
+      "status": "1"
     },
     {
       "id_client": "2034",
@@ -831,7 +814,7 @@
         }
       ],
       "id_order": 34,
-      "status": "未"
+      "status": "1"
     },
     {
       "id_client": "2035",
@@ -847,9 +830,7 @@
           "id_cake": 2,
           "name": "ノエルショコラ",
           "size": [
-            "４号 ￥３,９００",
-            "５号 ￥４,８００",
-            "６号 ￥５,８００"
+            "５号 ￥４,８００"
           ],
           "quantity": 5,
           "image": "../image/ノエルショコラ.jpg",
@@ -857,7 +838,7 @@
         }
       ],
       "id_order": 35,
-      "status": "未"
+      "status": "1"
     },
     {
       "id_client": "2036",
@@ -881,7 +862,7 @@
         }
       ],
       "id_order": 36,
-      "status": "未"
+      "status": "1"
     },
     {
       "id_client": "2037",
@@ -905,7 +886,7 @@
         }
       ],
       "id_order": 37,
-      "status": "未"
+      "status": "1"
     },
     {
       "id_client": "2038",
@@ -921,9 +902,7 @@
           "id_cake": 1,
           "name": "ノエルフレーズ",
           "size": [
-            "４号 ￥３,７００",
-            "５号 ￥４,６００",
-            "６号 ￥５,６００"
+            "４号 ￥３,７００"
           ],
           "quantity": 10,
           "image": "../image/ノエルフレーズ.jpg",
@@ -931,7 +910,7 @@
         }
       ],
       "id_order": 38,
-      "status": "未"
+      "status": "1"
     },
     {
       "id_client": "2039",
@@ -955,7 +934,7 @@
         }
       ],
       "id_order": 39,
-      "status": "未"
+      "status": "1"
     },
     {
       "id_client": "2040",
@@ -971,9 +950,7 @@
           "id_cake": 2,
           "name": "ノエルショコラ",
           "size": [
-            "４号 ￥３,９００",
-            "５号 ￥４,８００",
-            "６号 ￥５,８００"
+            "５号 ￥４,８００"
           ],
           "quantity": 5,
           "image": "../image/ノエルショコラ.jpg",
@@ -981,7 +958,7 @@
         }
       ],
       "id_order": 40,
-      "status": "未"
+      "status": "1"
     },
     {
       "id_client": "2041",
@@ -997,7 +974,6 @@
           "id_cake": 5,
           "name": "ノエルレア",
           "size": [
-            "１６cm x １１cm ￥４,６００",
             "１４cm x １４cm ￥４,６００"
           ],
           "quantity": 5,
@@ -1006,7 +982,7 @@
         }
       ],
       "id_order": 41,
-      "status": "未"
+      "status": "1"
     },
     {
       "id_client": "2042",
@@ -1030,7 +1006,7 @@
         }
       ],
       "id_order": 42,
-      "status": "未"
+      "status": "1"
     },
     {
       "id_client": "2043",
@@ -1054,7 +1030,7 @@
         }
       ],
       "id_order": 43,
-      "status": "未"
+      "status": "1"
     },
     {
       "id_client": "2044",
@@ -1078,7 +1054,7 @@
         }
       ],
       "id_order": 44,
-      "status": "未"
+      "status": "1"
     },
     {
       "id_client": "2045",
@@ -1094,8 +1070,6 @@
           "id_cake": 2,
           "name": "ノエルショコラ",
           "size": [
-            "４号 ￥３,９００",
-            "５号 ￥４,８００",
             "６号 ￥５,８００"
           ],
           "quantity": 5,
@@ -1104,7 +1078,7 @@
         }
       ],
       "id_order": 45,
-      "status": "未"
+      "status": "1"
     },
     {
       "id_client": "2046",
@@ -1120,8 +1094,6 @@
           "id_cake": 2,
           "name": "ノエルショコラ",
           "size": [
-            "４号 ￥３,９００",
-            "５号 ￥４,８００",
             "６号 ￥５,８００"
           ],
           "quantity": 5,
@@ -1130,7 +1102,7 @@
         }
       ],
       "id_order": 46,
-      "status": "未"
+      "status": "1"
     },
     {
       "id_client": "2047",
@@ -1146,7 +1118,6 @@
           "id_cake": 5,
           "name": "ノエルレア",
           "size": [
-            "１６cm x １１cm ￥４,６００",
             "１４cm x １４cm ￥４,６００"
           ],
           "quantity": 5,
@@ -1155,7 +1126,7 @@
         }
       ],
       "id_order": 47,
-      "status": "未"
+      "status": "1"
     },
     {
       "id_client": "2048",
@@ -1179,7 +1150,7 @@
         }
       ],
       "id_order": 48,
-      "status": "未"
+      "status": "1"
     },
     {
       "id_client": "2049",
@@ -1195,8 +1166,6 @@
           "id_cake": 1,
           "name": "ノエルフレーズ",
           "size": [
-            "４号 ￥３,７００",
-            "５号 ￥４,６００",
             "６号 ￥５,６００"
           ],
           "quantity": 10,
@@ -1205,7 +1174,7 @@
         }
       ],
       "id_order": 49,
-      "status": "未"
+      "status": "1"
     },
     {
       "id_client": "2050",
@@ -1229,7 +1198,7 @@
         }
       ],
       "id_order": 50,
-      "status": "未"
+      "status": "1"
     }
   ]
 }

@@ -7,6 +7,7 @@ require('dotenv').config();
 
 const app = express();
 const fs = require('fs');
+const { error } = require('console');
 
 app.use(cors());
 app.use(express.json());
@@ -123,9 +124,33 @@ app.post('/api/reservar', (req, res) => {
   });
 });
 
-//atualiza status
+//atualiza pedido
 app.put('/api/reservar/:id_order', (req, res) => {
-  console.log('/api/reservar/:id_order')
+  const id_order = parseInt(req.params.id_order, 10);
+  const { status } = req.body;
+
+  fs.readFile(orderPath, 'utf-8', (err, data) => {
+    if (err) return res.status(500).json({ error: 'Erro ao ler Arquivo.'});
+    
+    let json;
+    try {
+      json = JSON.parse(data);
+    } catch (error) {
+      return res.status(500).json({ error: 'Arquivo JSON inválido.'})
+    }
+
+    const index = json.orders.findIndex(o => o.id_order === id_order);
+    if(index === -1){
+      return res.status(404).json({ error: 'Pedido não encontrado.' })
+    }
+
+    json.orders[index].status = status;
+
+    fs.writeFile(orderPath, JSON.stringify(json, null, 2), (err) => {
+      if (err) return res.status(500).json({error: 'Erro ao salvar arquivo.'});
+      res.json({success: true, order: json.orders[index]})
+    })
+  })
 });
 
 app.listen(3001, () => {
