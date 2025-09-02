@@ -154,5 +154,5 @@ app.put('/api/reservar/:id_order', (req, res) => {
 });
 
 app.listen(3001, () => {
-  console.log('Servidor rodando em http://localhost:3001')
+  console.log(`Servidor rodando na porta ${PORT}`);
 })
