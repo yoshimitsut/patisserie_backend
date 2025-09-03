@@ -53,7 +53,7 @@ app.post('/api/reservar', (req, res) => {
     const lastId = json.orders.length > 0 ? json.orders[json.orders.length - 1].id_order : 0;
     newOrder.id_order = lastId + 1;
 
-    newOrder.status= '未';
+    newOrder.status= '1';
     // newOrder.payment = '未';
 
     json.orders.push(newOrder);
