@@ -79,8 +79,8 @@ app.post('/api/reservar', (req, res) => {
         }
 
         const htmlContent = `
-        <h2>🎂 ご注文ありがとうございます！</h2>
-          <p>注文番号: <strong>${newOrder.id_order}</strong></p>
+        <h2>🎂 注文ありがとうございます！</h2>
+          <p>受付番号: <strong>${newOrder.id_order}</strong></p>
           <p>お名前: ${newOrder.first_name} ${newOrder.last_name}</p>
           <p>電話番号: ${newOrder.tel}</p>
           <p>受け取り日時: ${newOrder.date} - ${newOrder.pickupHour}</p>
@@ -99,7 +99,7 @@ app.post('/api/reservar', (req, res) => {
         const mailOptions = {
           from: `"Pâtisserie Cake" <${process.env.EMAIL_USER}>`,
           to: [newOrder.email, process.env.EMAIL_USER], // manda para o cliente E para você
-          subject: `🎂 ご注文確認 - 注文番号 ${newOrder.id_order}`,
+          subject: `🎂 ご注文確認 - 受付番号 ${newOrder.id_order}`,
           html: htmlContent,
           attachments: [
             {
