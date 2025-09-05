@@ -20,6 +20,21 @@ if(!fs.existsSync(orderPath)) {
   fs.writeFileSync(orderPath, JSON.stringify({ orders:[] }, null, 2));
 }
 
+function getNextClientId(orders) {
+  if (!orders.length) return "0001";
+  const last = orders[orders.length - 1];
+  const next = parseInt(last.id_client) + 1;
+  return String(next).padStart(4, "0");
+}
+
+app.get("/api/ultimoId", (req, res) => {
+  const { orders } = JSON.parse(fs.readFileSync(orderPath, "utf8"));
+  if (!orders.length) {
+    return res.json({ lastId: "0000" })
+  }
+  res.json({ lastId: orders[orders.length - 1].id_client })
+});
+
 //lista pedidos
 app.get('/api/list', (req, res) => {
   fs.readFile(orderPath, 'utf-8', (err, data)=> {
