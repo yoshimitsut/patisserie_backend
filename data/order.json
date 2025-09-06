@@ -1219,6 +1219,28 @@
       ],
       "id_order": 51,
       "status": "1"
+    },
+    {
+      "id_client": "0003",
+      "first_name": "a",
+      "last_name": "a",
+      "email": "a@a.com",
+      "tel": "123455",
+      "date": "2025-09-22",
+      "date_order": "2025-09-05T12:43:13.429Z",
+      "pickupHour": "13~17時",
+      "message": "a",
+      "cakes": [
+        {
+          "id_cake": 1,
+          "name": "ノエルフレーズ",
+          "size": "４号",
+          "price": 3700,
+          "amount": 1
+        }
+      ],
+      "id_order": 52,
+      "status": "1"
     }
   ]
 }
