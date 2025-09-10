@@ -88,7 +88,7 @@ app.post('/api/reservar', (req, res) => {
           <p></p>
           <p>ご注文内容:</p>
           <ul>
-            ${newOrder.cakes.map(c => `<li>${c.name} - ${c.size} - ${c.amount}個</li>`).join('')}
+            ${newOrder.cakes.map(c => `<li>${c.name} - ${c.size} - ${c.amount}個 - ${c.message_cake}</li>`).join('')}
           </ul>
           <p></p>
           <p>こちらが受付用QRコードです:</p>
