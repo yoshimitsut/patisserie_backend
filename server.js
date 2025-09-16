@@ -21,7 +21,7 @@ if(!fs.existsSync(orderPath)) {
   fs.writeFileSync(orderPath, JSON.stringify({ orders:[] }, null, 2));
 }
 
-//lista pedidos
+//lista pedidos// lista pedidos
 app.get('/api/list', (req, res) => {
   fs.readFile(orderPath, 'utf-8', (err, data) => {
     if (err) return res.status(500).json({ error: 'Erro ao ler pedidos.' });
@@ -32,13 +32,11 @@ app.get('/api/list', (req, res) => {
 
       const rawSearch = (req.query.search || '').toString().trim();
 
-      // const normalizeSpaces = (text) => text.replace(/\s+/g, "");
-      
-      // --- Normalizador: transforma hiragana → katakana ---
+      // Normalizador: transforma hiragana → katakana
       const toKatakana = (text) => {
         if (!text) return '';
         return String(text)
-          .normalize("NFKC") 
+          .normalize("NFKC")
           .replace(/[\u3041-\u3096]/g, ch =>
             String.fromCharCode(ch.charCodeAt(0) + 0x60)
           )
@@ -46,40 +44,43 @@ app.get('/api/list', (req, res) => {
           .toLowerCase();
       };
 
-      const q = toKatakana(rawSearch);
+      // Apenas números
       const qDigits = rawSearch.replace(/\D/g, "");
 
-      if (!q && !qDigits) return res.json(orders);
+      // Apenas katakana/texto
+      const qText = toKatakana(rawSearch);
+
+      // Se não digitou nada, retorna todos
+      if (!qDigits && !qText) return res.json(orders);
 
       const filtered = orders.filter(order => {
-        const idStr = String(order.id_order ?? "");
+        const idNum = Number(order.id_order ?? 0);          // Número do ID
+        const searchNum = Number(qDigits);                 // Número do input
         const telDigits = String(order.tel ?? "").replace(/\D/g, "");
         const first = toKatakana(order.first_name ?? order.firstName ?? "");
         const last = toKatakana(order.last_name ?? order.lastName ?? "");
         const fullname = toKatakana(`${order.first_name ?? order.firstName ?? ""}${order.last_name ?? order.lastName ?? ""}`);
 
-        // ID ou telefone
-        if (qDigits) {
-          if (idStr.includes(qDigits)) return true;
-          if (telDigits.includes(qDigits)) return true;
-        }
+        // Busca pelo ID exata (numérica)
+        if (qDigits && idNum === searchNum) return true;
 
-        // Nome em kana
-        if (q) {
-          if (first.includes(q)) return true;
-          if (last.includes(q)) return true;
-          if (fullname.includes(q)) return true;
-        }
+        // Busca pelo telefone (contém)
+        if (qDigits && telDigits.includes(qDigits)) return true;
+
+        // Busca pelo nome (hiragana/katakana normalizado)
+        if (qText && (first.includes(qText) || last.includes(qText) || fullname.includes(qText))) return true;
 
         return false;
       });
 
       res.json(filtered);
+
     } catch (e) {
       res.status(500).json({ error: 'Arquivo JSON inválido.' });
     }
   });
 });
+
 
 
 //salvar pedido e envia qr code por emaill

@@ -785,37 +785,6 @@
       ],
       "id_order": 30,
       "status": "4"
-    },
-    {
-      "id_client": "5qrj93",
-      "first_name": "teste",
-      "last_name": "teste",
-      "email": "shimitsutanaka@gmail.com",
-      "tel": "111111111",
-      "date": "2025-09-15",
-      "date_order": "2025-09-09",
-      "pickupHour": "13~17時",
-      "message": "menssage teste",
-      "cakes": [
-        {
-          "id_cake": 1,
-          "name": "ノエルフレーズ",
-          "amount": 2,
-          "price": 4600,
-          "size": "5号",
-          "message_cake": "ハッピーバースデーのプレート"
-        },
-        {
-          "id_cake": 3,
-          "name": "パリブレストピスターシュ",
-          "amount": 1,
-          "price": 4800,
-          "size": "15cm",
-          "message_cake": "ロウソクを付けてください"
-        }
-      ],
-      "id_order": 31,
-      "status": "1"
     }
   ]
 }
