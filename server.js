@@ -10,6 +10,7 @@ const PORT = process.env.PORT || 3001;
 const app = express();
 const fs = require('fs');
 const { error } = require('console');
+const { text } = require('stream/consumers');
 
 app.use(cors());
 app.use(express.json());
@@ -22,19 +23,64 @@ if(!fs.existsSync(orderPath)) {
 
 //lista pedidos
 app.get('/api/list', (req, res) => {
-  fs.readFile(orderPath, 'utf-8', (err, data)=> {
-    if (err) {
-      return res.status(500).json({ error: 'Erro ao ler os pedidos.' })
-    }
-
+  fs.readFile(orderPath, 'utf-8', (err, data) => {
+    if (err) return res.status(500).json({ error: 'Erro ao ler pedidos.' });
+    
     try {
-      const pedidos = JSON.parse(data);
-      res.json(pedidos.orders);
-    } catch (error) {
-      res.status(500).json({ error: 'Arquivo JSON inválidos.' })
+      const parsed = JSON.parse(data);
+      const orders = Array.isArray(parsed) ? parsed : (parsed.orders || []);
+
+      const rawSearch = (req.query.search || '').toString().trim();
+
+      // const normalizeSpaces = (text) => text.replace(/\s+/g, "");
+      
+      // --- Normalizador: transforma hiragana → katakana ---
+      const toKatakana = (text) => {
+        if (!text) return '';
+        return String(text)
+          .normalize("NFKC") 
+          .replace(/[\u3041-\u3096]/g, ch =>
+            String.fromCharCode(ch.charCodeAt(0) + 0x60)
+          )
+          .replace(/\s+/g, "")
+          .toLowerCase();
+      };
+
+      const q = toKatakana(rawSearch);
+      const qDigits = rawSearch.replace(/\D/g, "");
+
+      if (!q && !qDigits) return res.json(orders);
+
+      const filtered = orders.filter(order => {
+        const idStr = String(order.id_order ?? "");
+        const telDigits = String(order.tel ?? "").replace(/\D/g, "");
+        const first = toKatakana(order.first_name ?? order.firstName ?? "");
+        const last = toKatakana(order.last_name ?? order.lastName ?? "");
+        const fullname = toKatakana(`${order.first_name ?? order.firstName ?? ""}${order.last_name ?? order.lastName ?? ""}`);
+
+        // ID ou telefone
+        if (qDigits) {
+          if (idStr.includes(qDigits)) return true;
+          if (telDigits.includes(qDigits)) return true;
+        }
+
+        // Nome em kana
+        if (q) {
+          if (first.includes(q)) return true;
+          if (last.includes(q)) return true;
+          if (fullname.includes(q)) return true;
+        }
+
+        return false;
+      });
+
+      res.json(filtered);
+    } catch (e) {
+      res.status(500).json({ error: 'Arquivo JSON inválido.' });
     }
-  })
+  });
 });
+
 
 //salvar pedido e envia qr code por emaill
 app.post('/api/reservar', (req, res) => {
