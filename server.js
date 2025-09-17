@@ -47,7 +47,7 @@ app.get('/api/list', (req, res) => {
       const qDigits = rawSearch.replace(/\D/g, ""); // apenas dígitos (pode ter zeros à esquerda)
       const qText = toKatakana(rawSearch); // texto normalizado (kana)
 
-      console.log('search raw:', rawSearch, 'qDigits:', qDigits, 'qText:', qText);
+      // console.log('search raw:', rawSearch, 'qDigits:', qDigits, 'qText:', qText);
 
       // Mapa de status -> label japonês (ajuste se usar outros textos)
       const statusLabels = {
