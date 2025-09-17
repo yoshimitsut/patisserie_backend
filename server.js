@@ -50,13 +50,13 @@ app.get('/api/list', (req, res) => {
       // console.log('search raw:', rawSearch, 'qDigits:', qDigits, 'qText:', qText);
 
       // Mapa de status -> label japonês (ajuste se usar outros textos)
-      const statusLabels = {
-        "1": "未",
-        "2": "ネット決済済",
-        "3": "店頭支払い済",
-        "4": "お渡し済",
-        "5": "キャンセル",
-      };
+      // const statusLabels = {
+      //   "1": "未",
+      //   "2": "ネット決済済",
+      //   "3": "店頭支払い済",
+      //   "4": "お渡し済",
+      //   "5": "キャンセル",
+      // };
 
       if (!qDigits && !qText) {
         // sem busca -> retorna tudo
@@ -77,7 +77,7 @@ app.get('/api/list', (req, res) => {
           : "";
 
         // status label normalizado
-        const statusLabel = toKatakana(statusLabels[String(order.status) || ""] || "");
+        // const statusLabel = toKatakana(statusLabels[String(order.status) || ""] || "");
 
         // 1) pesquisa numérica: ID (com zeros) ou telefone
         if (qDigits) {
@@ -86,7 +86,7 @@ app.get('/api/list', (req, res) => {
           if (telDigits.includes(qDigits)) return true;
 
           // também aceita se a pessoa digitou '1' e quer o status numérico
-          if (String(order.status) === String(Number(qDigits))) return true;
+          // if (String(order.status) === String(Number(qDigits))) return true;
         }
 
         // 2) pesquisa textual: nomes, fullname, bolos, status textual
@@ -95,13 +95,13 @@ app.get('/api/list', (req, res) => {
           if (last.includes(qText)) return true;
           if (fullname.includes(qText)) return true;
           if (cakeNames.includes(qText)) return true;
-          if (statusLabel.includes(qText)) return true;
+          // if (statusLabel.includes(qText)) return true;
         }
 
         return false;
       });
 
-      console.log('filtered count:', filtered.length);
+      // console.log('filtered count:', filtered.length);
       res.json(filtered);
     } catch (e) {
       console.error('parse error', e);
