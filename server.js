@@ -114,7 +114,7 @@ if(!fs.existsSync(orderPath)) {
 app.get('/api/list', (req, res) => {
   fs.readFile(orderPath, 'utf-8', (err, data) => {
     if (err) return res.status(500).json({ error: 'Erro ao ler pedidos.' });
-
+    
     try {
       const parsed = JSON.parse(data);
       const orders = Array.isArray(parsed) ? parsed : (parsed.orders || []);
@@ -135,7 +135,6 @@ app.get('/api/list', (req, res) => {
       const qDigits = rawSearch.replace(/\D/g, "");
       const qText = toKatakana(rawSearch);
 
-      // Labels do status
       const statusLabels = {
         "a": "未",
         "b": "ネット決済済",
@@ -146,46 +145,54 @@ app.get('/api/list', (req, res) => {
 
       if (!qDigits && !qText) return res.json(orders);
 
-      const filtered = orders.map(order => {
-        const idStr = String(order.id_order ?? "").padStart(4, "0");
+      const filtered = [];
+
+      for (const order of orders) {
+        const idNum = Number(order.id_order ?? 0);
+        const searchNum = Number(qDigits);
         const telDigits = String(order.tel ?? "").replace(/\D/g, "");
-        const first = toKatakana(order.first_name ?? order.firstName ?? "");
-        const last  = toKatakana(order.last_name  ?? order.lastName  ?? "");
-        const fullname = toKatakana(`${order.first_name ?? order.firstName ?? ""}${order.last_name ?? order.lastName ?? ""}`);
-        const statusLabel = toKatakana(statusLabels[String(order.status) || ""] || "");
+        const first = toKatakana(order.first_name ?? "");
+        const last = toKatakana(order.last_name ?? "");
+        const fullname = toKatakana(`${order.first_name ?? ""}${order.last_name ?? ""}`);
 
         let match = false;
+        let cakeMatches = [];
 
-        // 1) Busca por ID ou telefone
-        if (qDigits) {
-          if (idStr.includes(qDigits)) match = true;
-          if (telDigits.includes(qDigits)) match = true;
-          if (String(order.status) === String(Number(qDigits))) match = true;
-        }
+        // ID
+        if (qDigits && idNum === searchNum) match = true;
 
-        // 2) Busca textual (nome cliente, status)
+        // Telefone
+        if (qDigits && telDigits.includes(qDigits)) match = true;
+
+        // Nome
+        if (qText && (first.includes(qText) || last.includes(qText) || fullname.includes(qText))) match = true;
+
+        // Status (a, b, c...)
         if (qText) {
-          if (first.includes(qText)) match = true;
-          if (last.includes(qText)) match = true;
-          if (fullname.includes(qText)) match = true;
-          if (statusLabel.includes(qText)) match = true;
+          const statusCode = String(order.status).toLowerCase();
+          const statusLabel = statusLabels[statusCode] || "";
+          
+          if (statusLabel.includes(rawSearch)) {
+            match = true;
+          }
         }
-
-        // 3) Busca dentro dos bolos (e já filtra o array cakes)
-        let filteredCakes = order.cakes || [];
-        if (qText && Array.isArray(order.cakes)) {
-          filteredCakes = order.cakes.filter(cake =>
-            toKatakana(cake.name ?? "").includes(qText)
-          );
-          if (filteredCakes.length > 0) match = true;
+        
+        // Bolo
+        if (qText && order.cakes) {
+          cakeMatches = order.cakes.filter(cake => {
+            const cakeName = toKatakana(cake.name ?? "");
+            return cakeName.includes(qText);
+          });
+          if (cakeMatches.length > 0) match = true;
         }
 
         if (match) {
-          return { ...order, cakes: filteredCakes }; // devolve apenas os bolos filtrados
+          filtered.push({
+            ...order,
+            cakes: cakeMatches.length > 0 ? cakeMatches : order.cakes // 🔑 aqui está a lógica
+          });
         }
-
-        return null;
-      }).filter(Boolean);
+      }
 
       res.json(filtered);
 
@@ -194,6 +201,7 @@ app.get('/api/list', (req, res) => {
     }
   });
 });
+
 
 
 
