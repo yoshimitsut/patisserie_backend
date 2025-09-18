@@ -29,7 +29,7 @@
         }
       ],
       "id_order": 1,
-      "status": "2"
+      "status": "c"
     },
     {
       "id_client": "g2y3u4",
@@ -60,7 +60,7 @@
         }
       ],
       "id_order": 2,
-      "status": "4"
+      "status": "a"
     },
     {
       "id_client": "j8k2l1",
@@ -83,7 +83,7 @@
         }
       ],
       "id_order": 3,
-      "status": "1"
+      "status": "a"
     },
     {
       "id_client": "a3s7d8",
@@ -106,7 +106,7 @@
         }
       ],
       "id_order": 4,
-      "status": "3"
+      "status": "c"
     },
     {
       "id_client": "q9w1e2",
@@ -137,7 +137,7 @@
         }
       ],
       "id_order": 5,
-      "status": "1"
+      "status": "a"
     },
     {
       "id_client": "b6n5m4",
@@ -168,7 +168,7 @@
         }
       ],
       "id_order": 6,
-      "status": "4"
+      "status": "d"
     },
     {
       "id_client": "v7c2x1",
@@ -191,7 +191,7 @@
         }
       ],
       "id_order": 7,
-      "status": "1"
+      "status": "a"
     },
     {
       "id_client": "p9o4i3",
@@ -214,7 +214,7 @@
         }
       ],
       "id_order": 8,
-      "status": "2"
+      "status": "b"
     },
     {
       "id_client": "t1h2j3",
@@ -237,7 +237,7 @@
         }
       ],
       "id_order": 9,
-      "status": "3"
+      "status": "c"
     },
     {
       "id_client": "r4e5f6",
@@ -268,7 +268,7 @@
         }
       ],
       "id_order": 10,
-      "status": "4"
+      "status": "d"
     },
     {
       "id_client": "y7u8i9",
@@ -299,7 +299,7 @@
         }
       ],
       "id_order": 11,
-      "status": "1"
+      "status": "a"
     },
     {
       "id_client": "n5m4c3",
@@ -322,7 +322,7 @@
         }
       ],
       "id_order": 12,
-      "status": "2"
+      "status": "b"
     },
     {
       "id_client": "x2z9a8",
@@ -353,7 +353,7 @@
         }
       ],
       "id_order": 13,
-      "status": "1"
+      "status": "a"
     },
     {
       "id_client": "q7w3e4",
@@ -376,7 +376,7 @@
         }
       ],
       "id_order": 14,
-      "status": "3"
+      "status": "c"
     },
     {
       "id_client": "h1j6k7",
@@ -399,7 +399,7 @@
         }
       ],
       "id_order": 15,
-      "status": "4"
+      "status": "d"
     },
     {
       "id_client": "d2f3g4",
@@ -430,7 +430,7 @@
         }
       ],
       "id_order": 16,
-      "status": "1"
+      "status": "a"
     },
     {
       "id_client": "j5k6l7",
@@ -453,7 +453,7 @@
         }
       ],
       "id_order": 17,
-      "status": "2"
+      "status": "b"
     },
     {
       "id_client": "m8n9b0",
@@ -476,7 +476,7 @@
         }
       ],
       "id_order": 18,
-      "status": "1"
+      "status": "a"
     },
     {
       "id_client": "p1o2i3",
@@ -499,7 +499,7 @@
         }
       ],
       "id_order": 19,
-      "status": "3"
+      "status": "c"
     },
     {
       "id_client": "l4k5j6",
@@ -530,7 +530,7 @@
         }
       ],
       "id_order": 20,
-      "status": "4"
+      "status": "d"
     },
     {
       "id_client": "u7y8t9",
@@ -553,7 +553,7 @@
         }
       ],
       "id_order": 21,
-      "status": "1"
+      "status": "a"
     },
     {
       "id_client": "o2u5t1",
@@ -576,7 +576,7 @@
         }
       ],
       "id_order": 22,
-      "status": "2"
+      "status": "b"
     },
     {
       "id_client": "k8j3i9",
@@ -599,7 +599,7 @@
         }
       ],
       "id_order": 23,
-      "status": "1"
+      "status": "a"
     },
     {
       "id_client": "g6f5d4",
@@ -622,7 +622,7 @@
         }
       ],
       "id_order": 24,
-      "status": "3"
+      "status": "c"
     },
     {
       "id_client": "l9m8n7",
@@ -645,7 +645,7 @@
         }
       ],
       "id_order": 25,
-      "status": "4"
+      "status": "d"
     },
     {
       "id_client": "z1x2c3",
@@ -676,7 +676,7 @@
         }
       ],
       "id_order": 26,
-      "status": "1"
+      "status": "a"
     },
     {
       "id_client": "v4b5n6",
@@ -707,7 +707,7 @@
         }
       ],
       "id_order": 27,
-      "status": "2"
+      "status": "b"
     },
     {
       "id_client": "r7t8y9",
@@ -730,7 +730,7 @@
         }
       ],
       "id_order": 28,
-      "status": "1"
+      "status": "a"
     },
     {
       "id_client": "f1g2h3",
@@ -761,7 +761,7 @@
         }
       ],
       "id_order": 29,
-      "status": "3"
+      "status": "c"
     },
     {
       "id_client": "j4k5l6",
@@ -784,7 +784,7 @@
         }
       ],
       "id_order": 30,
-      "status": "4"
+      "status": "d"
     },
     {
       "id_client": "asc7pn",
@@ -807,7 +807,7 @@
         }
       ],
       "id_order": 31,
-      "status": "1"
+      "status": "a"
     },
     {
       "id_client": "lz9ph5",
@@ -830,7 +830,7 @@
         }
       ],
       "id_order": 32,
-      "status": "1"
+      "status": "a"
     },
     {
       "id_client": "skllnt",
@@ -853,7 +853,7 @@
         }
       ],
       "id_order": 33,
-      "status": "1"
+      "status": "a"
     },
     {
       "id_client": "irwxb8",
@@ -884,7 +884,7 @@
         }
       ],
       "id_order": 34,
-      "status": "1"
+      "status": "a"
     }
   ]
 }

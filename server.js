@@ -22,6 +22,95 @@ if(!fs.existsSync(orderPath)) {
 }
 
 // lista pedidos
+// app.get('/api/list', (req, res) => {
+//   fs.readFile(orderPath, 'utf-8', (err, data) => {
+//     if (err) return res.status(500).json({ error: 'Erro ao ler pedidos.' });
+
+//     try {
+//       const parsed = JSON.parse(data);
+//       const orders = Array.isArray(parsed) ? parsed : (parsed.orders || []);
+
+//       const rawSearch = (req.query.search || '').toString().trim();
+
+//       // Normalizador: transforma hiragana → katakana, remove espaços e normaliza width
+//       const toKatakana = (text) => {
+//         if (!text) return '';
+//         return String(text)
+//           .normalize("NFKC")
+//           .replace(/[\u3041-\u3096]/g, ch =>
+//             String.fromCharCode(ch.charCodeAt(0) + 0x60)
+//           )
+//           .replace(/\s+/g, "")
+//           .toLowerCase();
+//       };
+
+//       const qDigits = rawSearch.replace(/\D/g, ""); // apenas dígitos (pode ter zeros à esquerda)
+//       const qText = toKatakana(rawSearch); // texto normalizado (kana)
+
+//       // console.log('search raw:', rawSearch, 'qDigits:', qDigits, 'qText:', qText);
+
+//       // Mapa de status -> label japonês (ajuste se usar outros textos)
+//       // const statusLabels = {
+//       //   "a": "未",
+//       //   "b": "ネット決済済",
+//       //   "c": "店頭支払い済",
+//       //   "d": "お渡し済",
+//       //   "e": "キャンセル",
+//       // };
+
+//       if (!qDigits && !qText) {
+//         // sem busca -> retorna tudo
+//         return res.json(orders);
+//       }
+
+//       const filtered = orders.filter(order => {
+//         // id como string com 4 dígitos (0001)
+//         const idStr = String(order.id_order ?? "").padStart(4, "0");
+//         const telDigits = String(order.tel ?? "").replace(/\D/g, "");
+//         const first = toKatakana(order.first_name ?? order.firstName ?? "");
+//         const last  = toKatakana(order.last_name  ?? order.lastName  ?? "");
+//         const fullname = toKatakana(`${order.first_name ?? order.firstName ?? ""}${order.last_name ?? order.lastName ?? ""}`);
+
+//         // nomes dos bolos (concatena todos os nomes normalizados)
+//         const cakeNames = Array.isArray(order.cakes)
+//           ? order.cakes.map(c => toKatakana(c.name ?? c.title ?? "")).join(" ")
+//           : "";
+
+//         // status label normalizado
+//         // const statusLabel = toKatakana(statusLabels[String(order.status) || ""] || "");
+
+//         // 1) pesquisa numérica: ID (com zeros) ou telefone
+//         if (qDigits) {
+//           // tentar conter (perfeito para '0001' também)
+//           if (idStr.includes(qDigits)) return true;
+//           if (telDigits.includes(qDigits)) return true;
+
+//           // também aceita se a pessoa digitou '1' e quer o status numérico
+//           // if (String(order.status) === String(Number(qDigits))) return true;
+//         }
+
+//         // 2) pesquisa textual: nomes, fullname, bolos, status textual
+//         if (qText) {
+//           if (first.includes(qText)) return true;
+//           if (last.includes(qText)) return true;
+//           if (fullname.includes(qText)) return true;
+//           if (cakeNames.includes(qText)) return true;
+//           // if (statusLabel.includes(qText)) return true;
+//         }
+
+//         return false;
+//       });
+
+//       // console.log('filtered count:', filtered.length);
+//       res.json(filtered);
+//     } catch (e) {
+//       console.error('parse error', e);
+//       res.status(500).json({ error: 'Arquivo JSON inválido.' });
+//     }
+//   });
+// });
+
+// lista pedidos
 app.get('/api/list', (req, res) => {
   fs.readFile(orderPath, 'utf-8', (err, data) => {
     if (err) return res.status(500).json({ error: 'Erro ao ler pedidos.' });
@@ -32,7 +121,6 @@ app.get('/api/list', (req, res) => {
 
       const rawSearch = (req.query.search || '').toString().trim();
 
-      // Normalizador: transforma hiragana → katakana, remove espaços e normaliza width
       const toKatakana = (text) => {
         if (!text) return '';
         return String(text)
@@ -44,72 +132,68 @@ app.get('/api/list', (req, res) => {
           .toLowerCase();
       };
 
-      const qDigits = rawSearch.replace(/\D/g, ""); // apenas dígitos (pode ter zeros à esquerda)
-      const qText = toKatakana(rawSearch); // texto normalizado (kana)
+      const qDigits = rawSearch.replace(/\D/g, "");
+      const qText = toKatakana(rawSearch);
 
-      // console.log('search raw:', rawSearch, 'qDigits:', qDigits, 'qText:', qText);
+      // Labels do status
+      const statusLabels = {
+        "a": "未",
+        "b": "ネット決済済",
+        "c": "店頭支払い済",
+        "d": "お渡し済",
+        "e": "キャンセル",
+      };
 
-      // Mapa de status -> label japonês (ajuste se usar outros textos)
-      // const statusLabels = {
-      //   "1": "未",
-      //   "2": "ネット決済済",
-      //   "3": "店頭支払い済",
-      //   "4": "お渡し済",
-      //   "5": "キャンセル",
-      // };
+      if (!qDigits && !qText) return res.json(orders);
 
-      if (!qDigits && !qText) {
-        // sem busca -> retorna tudo
-        return res.json(orders);
-      }
-
-      const filtered = orders.filter(order => {
-        // id como string com 4 dígitos (0001)
+      const filtered = orders.map(order => {
         const idStr = String(order.id_order ?? "").padStart(4, "0");
         const telDigits = String(order.tel ?? "").replace(/\D/g, "");
         const first = toKatakana(order.first_name ?? order.firstName ?? "");
         const last  = toKatakana(order.last_name  ?? order.lastName  ?? "");
         const fullname = toKatakana(`${order.first_name ?? order.firstName ?? ""}${order.last_name ?? order.lastName ?? ""}`);
+        const statusLabel = toKatakana(statusLabels[String(order.status) || ""] || "");
 
-        // nomes dos bolos (concatena todos os nomes normalizados)
-        const cakeNames = Array.isArray(order.cakes)
-          ? order.cakes.map(c => toKatakana(c.name ?? c.title ?? "")).join(" ")
-          : "";
+        let match = false;
 
-        // status label normalizado
-        // const statusLabel = toKatakana(statusLabels[String(order.status) || ""] || "");
-
-        // 1) pesquisa numérica: ID (com zeros) ou telefone
+        // 1) Busca por ID ou telefone
         if (qDigits) {
-          // tentar conter (perfeito para '0001' também)
-          if (idStr.includes(qDigits)) return true;
-          if (telDigits.includes(qDigits)) return true;
-
-          // também aceita se a pessoa digitou '1' e quer o status numérico
-          // if (String(order.status) === String(Number(qDigits))) return true;
+          if (idStr.includes(qDigits)) match = true;
+          if (telDigits.includes(qDigits)) match = true;
+          if (String(order.status) === String(Number(qDigits))) match = true;
         }
 
-        // 2) pesquisa textual: nomes, fullname, bolos, status textual
+        // 2) Busca textual (nome cliente, status)
         if (qText) {
-          if (first.includes(qText)) return true;
-          if (last.includes(qText)) return true;
-          if (fullname.includes(qText)) return true;
-          if (cakeNames.includes(qText)) return true;
-          // if (statusLabel.includes(qText)) return true;
+          if (first.includes(qText)) match = true;
+          if (last.includes(qText)) match = true;
+          if (fullname.includes(qText)) match = true;
+          if (statusLabel.includes(qText)) match = true;
         }
 
-        return false;
-      });
+        // 3) Busca dentro dos bolos (e já filtra o array cakes)
+        let filteredCakes = order.cakes || [];
+        if (qText && Array.isArray(order.cakes)) {
+          filteredCakes = order.cakes.filter(cake =>
+            toKatakana(cake.name ?? "").includes(qText)
+          );
+          if (filteredCakes.length > 0) match = true;
+        }
 
-      // console.log('filtered count:', filtered.length);
+        if (match) {
+          return { ...order, cakes: filteredCakes }; // devolve apenas os bolos filtrados
+        }
+
+        return null;
+      }).filter(Boolean);
+
       res.json(filtered);
+
     } catch (e) {
-      console.error('parse error', e);
       res.status(500).json({ error: 'Arquivo JSON inválido.' });
     }
   });
 });
-
 
 
 
