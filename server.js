@@ -18,6 +18,7 @@ app.use(cors());
 app.use(express.json());
 
 const orderPath = path.join(__dirname, 'data', 'order.json');
+const cakePath = path.join(__dirname, 'data', 'cake.json');
 
 if(!fs.existsSync(orderPath)) {
   fs.writeFileSync(orderPath, JSON.stringify({ orders:[] }, null, 2));
@@ -117,8 +118,23 @@ app.get('/api/list', (req, res) => {
   });
 });
 
-//verifica quantidade
 
+app.get('/api/cake', (req, res) => {
+  fs.readFile(cakePath, 'utf8', (err, data) => {
+    if (err) {
+      console.error('Erro ao ler o arquivo cake.json:', err);
+      return res.status(500).json({ error: 'Erro ao carregar dados de bolos.' });
+    }
+
+    try {
+      const cakes = JSON.parse(data);
+      res.json(cakes);
+    } catch (e) {
+      console.error('Erro ao parsear cake.json:', e);
+      res.status(500).json({ error: 'Arquivo JSON de bolos inválido.' });
+    }
+  });
+});
 
 
 
@@ -132,7 +148,7 @@ app.post('/api/reservar', async (req, res) => {
 
     const lastId = json.orders.length > 0 ? json.orders[json.orders.length - 1].id_order : 0;
     newOrder.id_order = lastId + 1;
-    newOrder.status = "1";
+    newOrder.status = "a";
 
     json.orders.push(newOrder);
     fs.writeFileSync(orderPath, JSON.stringify(json, null, 2));
@@ -160,7 +176,7 @@ app.post('/api/reservar', async (req, res) => {
 
     // Envia e-mail
     const emailResponse = await resend.emails.send({
-      from: "Pedidos <pedidos@seudominio.com>",
+      from: "Pedidos <araha-okinawa.online>",
       to: newOrder.email,
       subject: `🎂 ご注文確認 - 受付番号 ${String(newOrder.id_order).padStart(4,"0")}`,
       html: htmlContent
