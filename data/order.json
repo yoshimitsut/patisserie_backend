@@ -930,7 +930,7 @@
         }
       ],
       "id_order": 36,
-      "status": "a"
+      "status": "e"
     },
     {
       "id_client": "kitszb",
@@ -953,7 +953,7 @@
         }
       ],
       "id_order": 37,
-      "status": "a"
+      "status": "e"
     },
     {
       "id_client": "ozb6p2",
@@ -976,7 +976,7 @@
         }
       ],
       "id_order": 38,
-      "status": "a"
+      "status": "e"
     },
     {
       "id_client": "jzsyrd",
@@ -999,7 +999,69 @@
         }
       ],
       "id_order": 39,
-      "status": "1"
+      "status": "e"
+    },
+    {
+      "id_client": "6evpb8",
+      "first_name": "cadastro",
+      "last_name": "teste",
+      "email": "shimitsutanaka@gmail.com",
+      "tel": "13231423",
+      "date": "2025-12-25",
+      "date_order": "2025-09-19",
+      "pickupHour": "13~17時",
+      "message": "teste cadastro de pedido!",
+      "cakes": [
+        {
+          "id_cake": 2,
+          "name": "ノエルショコラ",
+          "amount": 4,
+          "price": 3900,
+          "size": "４号",
+          "message_cake": "test bolo"
+        },
+        {
+          "id_cake": 5,
+          "name": "ノエルレア",
+          "amount": 6,
+          "price": 4600,
+          "size": "１６cm x １１cm",
+          "message_cake": "teste bolo 2"
+        },
+        {
+          "id_cake": 6,
+          "name": "クリスマスロール　",
+          "amount": 1,
+          "price": 3200,
+          "size": "１７cm",
+          "message_cake": "teste bolo 3"
+        }
+      ],
+      "id_order": 40,
+      "status": "e"
+    },
+    {
+      "id_client": "fpad1j",
+      "first_name": "teste",
+      "last_name": "teste2",
+      "email": "teste@teste.com",
+      "tel": "123124123",
+      "date": "2025-12-25",
+      "date_order": "2025-09-19",
+      "pickupHour": "13~17時",
+      "message": "tsteteste",
+      "cakes": [
+        {
+          "id_cake": 2,
+          "name": "ノエルショコラ",
+          "amount": 1,
+          "price": 4800,
+          "size": "５号",
+          "message_cake": "testetsetset"
+        }
+      ],
+      "id_order": 41,
+      "status": "e"
     }
   ]
 }
