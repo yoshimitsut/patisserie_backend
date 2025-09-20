@@ -176,7 +176,7 @@ app.post('/api/reservar', async (req, res) => {
 
     // Envia e-mail
     const emailResponse = await resend.emails.send({
-      from: "Pedidos <araha-okinawa.online>",
+      from: "Pedidos <info@araha-okinawa.online>",
       to: newOrder.email,
       subject: `🎂 ご注文確認 - 受付番号 ${String(newOrder.id_order).padStart(4,"0")}`,
       html: htmlContent
