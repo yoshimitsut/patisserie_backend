@@ -8,7 +8,7 @@
         { "size": "５号", "price": 4600 },
         { "size": "６号", "price": 5600 }
       ],
-      "stock": 10,
+      "stock": 0,
       "image": "../image/ノエルフレーズ.jpg"
     },
     
@@ -34,7 +34,7 @@
     },
     {
       "id_cake": 4,
-      "name": "フェデルタ　arrumar（完売）",
+      "name": "フェデルタ",
       "sizes": [
         { "size": "１６cm x １１cm", "price": 4600 }
       ],
