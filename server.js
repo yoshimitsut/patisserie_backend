@@ -4,7 +4,6 @@ const cors = require('cors');
 const QRcode = require('qrcode');
 require('dotenv').config();
 
-const nodemailer = require('nodemailer');
 const { Resend } = require('resend');
 
 const PORT = process.env.PORT || 3001;
@@ -137,12 +136,12 @@ app.get('/api/cake', (req, res) => {
 });
 
 
-
-//salvar pedido e envia qr code por emaill
+// salvar pedido e envia qr code por email
 app.post('/api/reservar', async (req, res) => {
   const newOrder = req.body;
 
   try {
+    // --- Atualiza pedidos ---
     const data = fs.readFileSync(orderPath, 'utf-8');
     const json = JSON.parse(data);
 
@@ -153,13 +152,22 @@ app.post('/api/reservar', async (req, res) => {
     json.orders.push(newOrder);
     fs.writeFileSync(orderPath, JSON.stringify(json, null, 2));
 
-    // Inicializa Resend
-    const resend = new Resend(process.env.RESEND_API_KEY);
+    // --- Atualiza estoque ---
+    const cakeData = fs.readFileSync(cakePath, 'utf-8');
+    const cakesJson = JSON.parse(cakeData);
 
-    // Gera QR Code
+    newOrder.cakes.forEach(orderCake => {
+      const cake = cakesJson.cakes.find(c => c.name === orderCake.name);
+      if (cake) {
+        cake.stock = Math.max(0, cake.stock - Number(orderCake.amount || 0));
+      }
+    });
+
+    fs.writeFileSync(cakePath, JSON.stringify(cakesJson, null, 2));
+
+    // --- Envia email com QR Code ---
     const qrDataUrl = await QRcode.toDataURL(String(newOrder.id_order));
 
-    // Monta HTML
     const htmlContent = `
       <h2>🎂 注文ありがとうございます！</h2>
       <p>受付番号: <strong>${String(newOrder.id_order).padStart(4,"0")}</strong></p>
@@ -174,7 +182,6 @@ app.post('/api/reservar', async (req, res) => {
       <img src="${qrDataUrl}" width="400" />
     `;
 
-    // Envia e-mail
     const emailResponse = await resend.emails.send({
       from: "Pedidos <info@araha-okinawa.online>",
       to: newOrder.email,
@@ -183,6 +190,7 @@ app.post('/api/reservar', async (req, res) => {
     });
 
     console.log("Resend response:", emailResponse);
+
     res.json({ success: true, id: newOrder.id_order });
 
   } catch (err) {
@@ -191,6 +199,33 @@ app.post('/api/reservar', async (req, res) => {
   }
 });
 
+
+// excluir pedido pelo id
+app.delete('/api/reservar/:id', (req, res) => {
+  const orderId = parseInt(req.params.id, 10);
+
+  try {
+    const data = fs.readFileSync(orderPath, 'utf-8');
+    const json = JSON.parse(data);
+
+    const index = json.orders.findIndex(o => o.id_order === orderId);
+
+    if (index === -1) {
+      return res.status(404).json({ success: false, error: "Pedido não encontrado." });
+    }
+
+    // remove o pedido
+    const removedOrder = json.orders.splice(index, 1)[0];
+
+    fs.writeFileSync(orderPath, JSON.stringify(json, null, 2));
+
+    res.json({ success: true, removed: removedOrder });
+
+  } catch (err) {
+    console.error("Erro ao excluir pedido:", err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
 
 
 
