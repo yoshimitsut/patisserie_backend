@@ -141,10 +141,10 @@ app.get('/api/timeslots', (req, res) => {
     const data = fs.readFileSync(timeslotPath, 'utf-8');
     const timeslots = JSON.parse(data);
 
-    const available = timeslots.filter(t => t.limit > 0);
+    // const available = timeslots.filter(t => t.limit > 0);
 
-    res.json(available);
-    
+    res.json(timeslots);
+
   } catch (error) {
     console.error("Erro ao let timeslot.json:", error);
     res.status(500).json({ error: "Erro ao carregar horários" });
