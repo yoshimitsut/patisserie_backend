@@ -10,14 +10,15 @@ const PORT = process.env.PORT || 3001;
 
 const app = express();
 const fs = require('fs');
-const { error } = require('console');
-const { text } = require('stream/consumers');
+// const { error } = require('console');
+// const { text } = require('stream/consumers');
 
 app.use(cors());
 app.use(express.json());
 
 const orderPath = path.join(__dirname, 'data', 'order.json');
 const cakePath = path.join(__dirname, 'data', 'cake.json');
+const timeslotPath = path.join(__dirname, 'data', 'timeslot.json');
 
 if(!fs.existsSync(orderPath)) {
   fs.writeFileSync(orderPath, JSON.stringify({ orders:[] }, null, 2));
@@ -135,6 +136,20 @@ app.get('/api/cake', (req, res) => {
   });
 });
 
+app.get('/api/timeslots', (req, res) => {
+  try {
+    const data = fs.readFileSync(timeslotPath, 'utf-8');
+    const timeslots = JSON.parse(data);
+
+    const available = timeslots.filter(t => t.limit > 0);
+
+    res.json(available);
+    
+  } catch (error) {
+    console.error("Erro ao let timeslot.json:", error);
+    res.status(500).json({ error: "Erro ao carregar horários" });
+  }
+});
 
 // salvar pedido e envia qr code por email
 app.post('/api/reservar', async (req, res) => {
@@ -164,6 +179,17 @@ app.post('/api/reservar', async (req, res) => {
     });
 
     fs.writeFileSync(cakePath, JSON.stringify(cakesJson, null, 2));
+
+    // Atualiza limie de horário
+    const timeslotData = fs.readFileSync(timeslotPath, "utf-8");
+    const timeslotJson = JSON.parse(timeslotData);
+
+    const selectedSlot = timeslotJson.find(t => t.time === newOrder.pickupHour);
+    if (selectedSlot && selectedSlot.limit > 0){
+      selectedSlot.limit -=1;
+    }
+
+    fs.writeFileSync(timeslotPath, JSON.stringify(timeslotJson, null, 2));
 
     // --- Envia email com QR Code ---
     const qrDataUrl = await QRcode.toDataURL(String(newOrder.id_order));

@@ -17,7 +17,7 @@
           "price": 5600
         }
       ],
-      "stock": 1,
+      "stock": 0,
       "image": "../image/ノエルフレーズ.jpg"
     },
     {
@@ -49,7 +49,7 @@
           "price": 4800
         }
       ],
-      "stock": 5,
+      "stock": 4,
       "image": "../image/パリブレストピスターシュ.jpg"
     },
     {
