@@ -17,7 +17,7 @@
           "price": 5600
         }
       ],
-      "stock": 0,
+      "stock": 2,
       "image": "../image/ノエルフレーズ.jpg"
     },
     {
@@ -37,7 +37,7 @@
           "price": 5800
         }
       ],
-      "stock": 0,
+      "stock": 1,
       "image": "../image/ノエルショコラ.jpg"
     },
     {
