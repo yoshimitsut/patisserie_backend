@@ -191,8 +191,13 @@ app.post('/api/reservar', async (req, res) => {
 
     fs.writeFileSync(timeslotPath, JSON.stringify(timeslotJson, null, 2));
 
-    // --- Envia email com QR Code ---
-    const qrDataUrl = await QRcode.toDataURL(String(newOrder.id_order));
+    const qrCodeBuffer = await QRcode.toBuffer(String(newOrder.id_order), {
+      type: 'png',
+      errorCorrectionLevel: 'H',
+      width: 400
+    });
+
+    const qrCodeContentId = 'qrcode_order_id';
 
     const htmlContent = `
       <h2>🎂 注文ありがとうございます！</h2>
@@ -205,14 +210,25 @@ app.post('/api/reservar', async (req, res) => {
         ${newOrder.cakes.map(c => `<li>${c.name} - ${c.size} - ${c.amount}個 - ${c.message_cake}</li>`).join('')}
       </ul>
       <p>受付用QRコード:</p>
-      <img src="${qrDataUrl}" width="400" />
+      
+      <img src="cid:${qrCodeContentId}" alt="QR Code do Pedido" width="400" />
     `;
 
+    // --- 2. Envia o email com o anexo inline ---
     const emailResponse = await resend.emails.send({
       from: "Pedidos <info@araha-okinawa.online>",
       to: newOrder.email,
       subject: `🎂 ご注文確認 - 受付番号 ${String(newOrder.id_order).padStart(4,"0")}`,
-      html: htmlContent
+      html: htmlContent,
+      // NOVO: Adiciona o Buffer como anexo inline
+      attachments: [
+        {
+          filename: 'qrcode.png',
+          content: qrCodeBuffer, // O Buffer binário gerado
+          contentDisposition: 'inline', // Indica que é para ser exibido no corpo do email
+          contentId: qrCodeContentId, // O ID que conecta o anexo à tag <img>
+        },
+      ],
     });
 
     console.log("Resend response:", emailResponse);
