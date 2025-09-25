@@ -359,7 +359,7 @@ app.delete('/api/reservar/:id', (req, res) => {
 app.put('/api/reservar/:id_order', (req, res) => {
   const id_order = parseInt(req.params.id_order, 10);
   const { status } = req.body;
-
+  
   fs.readFile(orderPath, 'utf-8', (err, data) => {
     if (err) return res.status(500).json({ error: 'Erro ao ler Arquivo.'});
     
@@ -369,7 +369,13 @@ app.put('/api/reservar/:id_order', (req, res) => {
     } catch (error) {
       return res.status(500).json({ error: 'Arquivo JSON inválido.'})
     }
+    
 
+    // Se 'orders' não existir ou não for um array, retorne um erro.
+    if (!json.orders || !Array.isArray(json.orders)) {
+        return res.status(404).json({ error: 'Lista de pedidos não encontrada.' });
+    }
+    
     const index = json.orders.findIndex(o => o.id_order === id_order);
     if(index === -1){
       return res.status(404).json({ error: 'Pedido não encontrado.' })
