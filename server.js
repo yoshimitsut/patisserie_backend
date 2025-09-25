@@ -141,9 +141,9 @@ app.get('/api/timeslots', (req, res) => {
     const data = fs.readFileSync(timeslotPath, 'utf-8');
     const timeslots = JSON.parse(data);
 
-    // const available = timeslots.filter(t => t.limit > 0);
+    const availableDates = timeslots.map((day) => day.date);
 
-    res.json(timeslots);
+    res.json({ availableDates, timeslots });
 
   } catch (error) {
     console.error("Erro ao let timeslot.json:", error);
