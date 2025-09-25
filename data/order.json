@@ -29,7 +29,7 @@
         }
       ],
       "id_order": 2,
-      "status": "e"
+      "status": "b"
     },
     {
       "id_client": "j8k2l1",
@@ -52,7 +52,7 @@
         }
       ],
       "id_order": 3,
-      "status": "a"
+      "status": "b"
     },
     {
       "id_client": "a3s7d8",
@@ -75,7 +75,7 @@
         }
       ],
       "id_order": 4,
-      "status": "c"
+      "status": "b"
     },
     {
       "id_client": "q9w1e2",
@@ -106,7 +106,7 @@
         }
       ],
       "id_order": 5,
-      "status": "a"
+      "status": "b"
     },
     {
       "id_client": "b6n5m4",
@@ -953,6 +953,29 @@
         }
       ],
       "id_order": 46,
+      "status": "a"
+    },
+    {
+      "id_client": "76vq0l",
+      "first_name": "a",
+      "last_name": "a",
+      "email": "shimitsutanaka@gmail.com",
+      "tel": "123123123",
+      "date": "2025-12-23",
+      "date_order": "2025-09-25",
+      "pickupHour": "17 ~ 19時",
+      "message": "teste mail",
+      "cakes": [
+        {
+          "id_cake": 2,
+          "name": "ノエルショコラ",
+          "amount": 1,
+          "price": 3900,
+          "size": "４号",
+          "message_cake": "test email"
+        }
+      ],
+      "id_order": 47,
       "status": "a"
     }
   ]
