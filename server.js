@@ -105,11 +105,10 @@ app.get('/api/list', (req, res) => {
         if (match) {
           filtered.push({
             ...order,
-            cakes: cakeMatches.length > 0 ? cakeMatches : order.cakes // 🔑 aqui está a lógica
+            cakes: cakeMatches.length > 0 ? cakeMatches : order.cakes 
           });
         }
       }
-
       res.json(filtered);
 
     } catch (e) {
@@ -151,12 +150,20 @@ app.get('/api/timeslots', (req, res) => {
   }
 });
 
+app.get("/api/timeslot", (req, res) => {
+  const date = req.query.date;
+  const data = JSON.parse(fs.readFileSync("public/data/timeslot.json", "utf-8"));
+  const day = data.find((d) => d.date === date);
+  if (!day) return res.json({ date, slots: [] });
+  res.json(day);
+});
+
 // salvar pedido e envia qr code por email
 app.post('/api/reservar', async (req, res) => {
   const newOrder = req.body;
 
   try {
-    // --- Atualiza pedidos ---
+    // --- 1. Atualiza pedidos ---
     const data = fs.readFileSync(orderPath, 'utf-8');
     const json = JSON.parse(data);
 
@@ -167,7 +174,7 @@ app.post('/api/reservar', async (req, res) => {
     json.orders.push(newOrder);
     fs.writeFileSync(orderPath, JSON.stringify(json, null, 2));
 
-    // --- Atualiza estoque ---
+    // --- 2. Atualiza estoque dos bolos ---
     const cakeData = fs.readFileSync(cakePath, 'utf-8');
     const cakesJson = JSON.parse(cakeData);
 
@@ -180,17 +187,22 @@ app.post('/api/reservar', async (req, res) => {
 
     fs.writeFileSync(cakePath, JSON.stringify(cakesJson, null, 2));
 
-    // Atualiza limie de horário
+    // --- 3. Atualiza limite de horário ---
     const timeslotData = fs.readFileSync(timeslotPath, "utf-8");
     const timeslotJson = JSON.parse(timeslotData);
 
-    const selectedSlot = timeslotJson.find(t => t.time === newOrder.pickupHour);
-    if (selectedSlot && selectedSlot.limit > 0){
-      selectedSlot.limit -=1;
+    // encontra o dia correto
+    const day = timeslotJson.find(d => d.date === newOrder.date);
+    if (day) {
+      const slot = day.slots.find(s => s.time === newOrder.pickupHour);
+      if (slot && slot.limit > 0) {
+        slot.limit -= 1;
+      }
     }
 
     fs.writeFileSync(timeslotPath, JSON.stringify(timeslotJson, null, 2));
 
+    // --- 4. Gera QR Code ---
     const qrCodeBuffer = await QRcode.toBuffer(String(newOrder.id_order), {
       type: 'png',
       errorCorrectionLevel: 'H',
@@ -210,23 +222,21 @@ app.post('/api/reservar', async (req, res) => {
         ${newOrder.cakes.map(c => `<li>${c.name} - ${c.size} - ${c.amount}個 - ${c.message_cake}</li>`).join('')}
       </ul>
       <p>受付用QRコード:</p>
-      
       <img src="cid:${qrCodeContentId}" alt="QR Code do Pedido" width="400" />
     `;
 
-    // --- 2. Envia o email com o anexo inline ---
+    // --- 5. Envia email ---
     const emailResponse = await resend.emails.send({
       from: "Pedidos <info@araha-okinawa.online>",
       to: newOrder.email,
       subject: `🎂 ご注文確認 - 受付番号 ${String(newOrder.id_order).padStart(4,"0")}`,
       html: htmlContent,
-      // NOVO: Adiciona o Buffer como anexo inline
       attachments: [
         {
           filename: 'qrcode.png',
-          content: qrCodeBuffer, // O Buffer binário gerado
-          contentDisposition: 'inline', // Indica que é para ser exibido no corpo do email
-          contentId: qrCodeContentId, // O ID que conecta o anexo à tag <img>
+          content: qrCodeBuffer,
+          contentDisposition: 'inline',
+          contentId: qrCodeContentId,
         },
       ],
     });
@@ -240,6 +250,7 @@ app.post('/api/reservar', async (req, res) => {
     res.status(500).json({ success: false, error: err.message });
   }
 });
+
 
 
 // excluir pedido pelo id
