@@ -1,0 +1,33 @@
+# fly.toml app configuration file
+# Gerado manualmente ou pelo comando `fly launch`
+
+app = "meu-backend"       # Nome do app no Fly.io (único)
+primary_region = "nrt"    # Região principal (nrt = Tóquio 🇯🇵)
+
+[build]
+  # Opcional se estiver usando Dockerfile
+  dockerfile = "Dockerfile"
+
+[env]
+  NODE_ENV = "production"
+  PORT = "8080"
+
+[[services]]
+  internal_port = 8080     # Porta usada pelo Node.js dentro do contêiner
+  protocol = "tcp"
+
+  [services.concurrency]
+    hard_limit = 25
+    soft_limit = 20
+
+  [[services.ports]]
+    handlers = ["http"]
+    port = 80               # Porta HTTP
+
+  [[services.ports]]
+    handlers = ["tls", "http"]
+    port = 443              # Porta HTTPS
+
+  [[services.tcp_checks]]
+    interval = "15s"
+    timeout = "2s"
