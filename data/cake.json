@@ -47,7 +47,7 @@
       "name": "パリブレストピスターシュ",
       "sizes": [
         {
-          "size": "１５cm",
+          "size": "15cm",
           "price": 4800
         }
       ],
@@ -60,7 +60,7 @@
       "name": "フェデルタ",
       "sizes": [
         {
-          "size": "１６cm x １１cm",
+          "size": "16cm x 11cm",
           "price": 4600
         }
       ],
@@ -73,11 +73,11 @@
       "name": "ノエルレア",
       "sizes": [
         {
-          "size": "１６cm x １１cm",
+          "size": "16cm x 11cm",
           "price": 4600
         },
         {
-          "size": "１４cm x １４cm",
+          "size": "14cm x 14cm",
           "price": 5000
         }
       ],
@@ -90,7 +90,7 @@
       "name": "クリスマスロール",
       "sizes": [
         {
-          "size": "１７cm",
+          "size": "17cm",
           "price": 3200
         }
       ],
