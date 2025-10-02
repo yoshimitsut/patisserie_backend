@@ -93,6 +93,11 @@ app.get('/api/list', (req, res) => {
           }
         }
         
+        // if (order.status === "e") {
+        //   console.log(order.status)
+        //   match = false;
+        // } 
+
         // Bolo
         if (qText && order.cakes) {
           cakeMatches = order.cakes.filter(cake => {
@@ -392,11 +397,45 @@ app.put('/api/reservar/:id_order', (req, res) => {
       return res.status(404).json({ error: 'Pedido não encontrado.' })
     }
 
+    const order = json.orders[index];
+    const previousStatus = order.status;
     json.orders[index].status = status;
 
     fs.writeFile(orderPath, JSON.stringify(json, null, 2), (err) => {
       if (err) return res.status(500).json({error: 'Erro ao salvar arquivo.'});
-      res.json({success: true, order: json.orders[index]})
+
+      if(status === "e" && previousStatus !== "e"){
+        fs.readFile(cakePath, 'utf-8', (err,cakeData) => {
+          if (err) {
+            console.error("Erro ao ler cake.json:", err);
+            return res.json({ success: true, order });
+          }
+          
+          let cakeJson;
+          try {
+            cakeJson = JSON.parse(cakeData);
+          } catch(error) {
+            console.log("cake.json inválido: ", error);
+            return res.json({ success: true, order });
+          }
+          
+          order.cakes.forEach(orderCake => {
+            const cakeInStock = cakeJson.cakes.find(c => c.id_cake === orderCake.id_cake);
+            if (cakeInStock) {
+              cakeInStock.stock = (Number(cakeInStock.stock) || 0) + Number(orderCake.amount);
+            }
+          });
+          
+          fs.writeFile(cakePath, JSON.stringify(cakeJson, null, 2), (err) => {
+            if(err) console.error("Erro ao atualizar estoque:", err);
+            res.json({success: true, order});
+          });
+        });
+      } else {
+        res.json({success: true, order});
+      }
+
+      // res.json({success: true, order: json.orders[index]})
     })
   })
 });
