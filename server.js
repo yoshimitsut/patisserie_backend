@@ -10,8 +10,9 @@ const PORT = process.env.PORT || 3001;
 
 const app = express();
 const fs = require('fs');
-// const { error } = require('console');
-// const { text } = require('stream/consumers');
+const fsPromises = fs.promises;
+
+const writeLocks = new Set();
 
 app.use(cors());
 app.use(express.json());
@@ -25,6 +26,21 @@ if(!fs.existsSync(orderPath)) {
 }
 
 const resend = new Resend(process.env.RESEND_API_KEY);
+
+function acquireLock(name = 'orders') {
+  return new Promise((resolve) => {
+    const tryAcquire = () => {
+      if (!writeLocks.has(name)) {
+        writeLocks.add(name);
+        resolve(() => writeLocks.delete(name));
+      } else {
+        setTimeout(tryAcquire, 10);
+      }
+    };
+    tryAcquire();
+  })
+}
+
 
 // lista pedidos
 app.get('/api/list', (req, res) => {
@@ -379,79 +395,143 @@ app.delete('/api/reservar/:id', (req, res) => {
   // });
 
 //atualiza pedido
-app.put('/api/reservar/:id_order', (req, res) => {
+app.put('/api/reservar/:id_order', async (req, res) => {
   const id_order = parseInt(req.params.id_order, 10);
   const { status } = req.body;
-  
-  fs.readFile(orderPath, 'utf-8', (err, data) => {
-    if (err) return res.status(500).json({ error: 'Erro ao ler Arquivo.'});
-    
-    let json;
-    try {
-      json = JSON.parse(data);
-    } catch (error) {
-      return res.status(500).json({ error: 'Arquivo JSON inválido.'})
-    }
-    
 
-    // Se 'orders' não existir ou não for um array, retorne um erro.
+  if (Number.isNaN(id_order)) {
+    return res.status(400).json({ success: false, error: '無効な受付番号です。' });
+  }
+
+  const release = await acquireLock('orders'); // bloqueia outras gravações
+  try {
+    const data = await fsPromises.readFile(orderPath, 'utf-8');
+    const json = JSON.parse(data);
+
     if (!json.orders || !Array.isArray(json.orders)) {
-        return res.status(404).json({ error: 'Lista de pedidos não encontrada.' });
+      return res.status(404).json({ success: false, error: '注文リストが見つかりません。' });
     }
-    
+
     const index = json.orders.findIndex(o => o.id_order === id_order);
-    if(index === -1){
-      return res.status(404).json({ error: 'Pedido não encontrado.' })
+    if (index === -1) {
+      return res.status(404).json({ success: false, error: '注文が見つかりません。' });
     }
 
     const order = json.orders[index];
     const previousStatus = order.status;
     json.orders[index].status = status;
 
-    fs.writeFile(orderPath, JSON.stringify(json, null, 2), (err) => {
-      if (err) return res.status(500).json({error: 'Erro ao salvar arquivo.'});
+    // escreve o arquivo de pedidos (await garante conclusão antes de responder)
+    await fsPromises.writeFile(orderPath, JSON.stringify(json, null, 2), 'utf-8');
 
-      if (status === "e" && previousStatus !== "e") {
-        fs.readFile(cakePath, 'utf-8', (err, cakeData) => {
-          if (err) {
-            console.error("Erro ao ler cake.json:", err);
-            return res.json({ success: true, order });
-          }
+    // Se for cancelamento, devolve estoque (mantendo atomicidade)
+    if (status === "e" && previousStatus !== "e") {
+      try {
+        const cakeData = await fsPromises.readFile(cakePath, 'utf-8');
+        const cakeJson = JSON.parse(cakeData);
 
-          let cakeJson;
-          try {
-            cakeJson = JSON.parse(cakeData);
-          } catch (error) {
-            console.error("cake.json inválido:", error);
-            return res.json({ success: true, order });
-          }
-
-          order.cakes.forEach(orderCake => {
-            const cakeInStock = cakeJson.cakes.find(c => c.name === orderCake.name);
-            if (cakeInStock && Array.isArray(cakeInStock.sizes)) {
-              const sizeItem = cakeInStock.sizes.find(s => s.size === orderCake.size);
-              if (sizeItem) {
-                const currentStock = Number(sizeItem.stock) || 0;
-                const addAmount = Number(orderCake.amount) || 0;
-                sizeItem.stock = currentStock + addAmount;
-              }
+        order.cakes.forEach(orderCake => {
+          const cakeInStock = cakeJson.cakes.find(c => c.name === orderCake.name);
+          if (cakeInStock && Array.isArray(cakeInStock.sizes)) {
+            const sizeItem = cakeInStock.sizes.find(s => s.size === orderCake.size);
+            if (sizeItem) {
+              sizeItem.stock = Number(sizeItem.stock || 0) + Number(orderCake.amount || 0);
             }
-          });
-
-          fs.writeFile(cakePath, JSON.stringify(cakeJson, null, 2), (err) => {
-            if (err) console.error("Erro ao atualizar estoque:", err);
-            res.json({ success: true, order });
-          });
+          }
         });
-      } else {
-        res.json({ success: true, order });
+
+        await fsPromises.writeFile(cakePath, JSON.stringify(cakeJson, null, 2), 'utf-8');
+      } catch (err) {
+        console.error("cake.jsonの更新エラー:", err);
+        // não falha a requisição principal por causa do estoque, mas logue.
       }
+    }
 
+    // responde somente depois de tudo salvo
+    res.json({ success: true, order: json.orders[index] });
 
-      // res.json({success: true, order: json.orders[index]})
-    })
-  })
+  } catch (err) {
+    console.error("PUT /api/reservar/:id_order エラー:", err);
+    res.status(500).json({ success: false, error: err.message });
+  } finally {
+    release(); // libera o lock
+  }
 });
+
+
+// app.put('/api/reservar/:id_order', (req, res) => {
+//   const id_order = parseInt(req.params.id_order, 10);
+//   const { status } = req.body;
+  
+//   fs.readFile(orderPath, 'utf-8', (err, data) => {
+//     if (err) return res.status(500).json({ error: 'Erro ao ler Arquivo.'});
+    
+//     let json;
+//     try {
+//       json = JSON.parse(data);
+//     } catch (error) {
+//       return res.status(500).json({ error: 'Arquivo JSON inválido.'})
+//     }
+    
+
+//     // Se 'orders' não existir ou não for um array, retorne um erro.
+//     if (!json.orders || !Array.isArray(json.orders)) {
+//         return res.status(404).json({ error: 'Lista de pedidos não encontrada.' });
+//     }
+    
+//     const index = json.orders.findIndex(o => o.id_order === id_order);
+//     if(index === -1){
+//       return res.status(404).json({ error: 'Pedido não encontrado.' })
+//     }
+
+//     const order = json.orders[index];
+//     const previousStatus = order.status;
+//     json.orders[index].status = status;
+
+//     fs.writeFile(orderPath, JSON.stringify(json, null, 2), (err) => {
+//       if (err) return res.status(500).json({error: 'Erro ao salvar arquivo.'});
+
+//       if (status === "e" && previousStatus !== "e") {
+//         fs.readFile(cakePath, 'utf-8', (err, cakeData) => {
+//           if (err) {
+//             console.error("Erro ao ler cake.json:", err);
+//             return res.json({ success: true, order });
+//           }
+
+//           let cakeJson;
+//           try {
+//             cakeJson = JSON.parse(cakeData);
+//           } catch (error) {
+//             console.error("cake.json inválido:", error);
+//             return res.json({ success: true, order });
+//           }
+
+//           order.cakes.forEach(orderCake => {
+//             const cakeInStock = cakeJson.cakes.find(c => c.name === orderCake.name);
+//             if (cakeInStock && Array.isArray(cakeInStock.sizes)) {
+//               const sizeItem = cakeInStock.sizes.find(s => s.size === orderCake.size);
+//               if (sizeItem) {
+//                 const currentStock = Number(sizeItem.stock) || 0;
+//                 const addAmount = Number(orderCake.amount) || 0;
+//                 sizeItem.stock = currentStock + addAmount;
+//               }
+//             }
+//           });
+
+//           fs.writeFile(cakePath, JSON.stringify(cakeJson, null, 2), (err) => {
+//             if (err) console.error("Erro ao atualizar estoque:", err);
+//             res.json({ success: true, order });
+//           });
+//         });
+//       } else {
+//         res.json({ success: true, order });
+//       }
+
+
+//       // res.json({success: true, order: json.orders[index]})
+//     })
+//   })
+// });
 
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
