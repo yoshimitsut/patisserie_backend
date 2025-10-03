@@ -403,60 +403,81 @@ app.put('/api/reservar/:id_order', async (req, res) => {
     return res.status(400).json({ success: false, error: '無効な受付番号です。' });
   }
 
-  const release = await acquireLock('orders'); // bloqueia outras gravações
+  const release = await acquireLock('orders'); // 同時更新を防ぐロック
   try {
-    const data = await fsPromises.readFile(orderPath, 'utf-8');
-    const json = JSON.parse(data);
+    // ===== 読み込みと検証 =====
+    const orderData = await fsPromises.readFile(orderPath, 'utf-8');
+    const orderJson = JSON.parse(orderData);
 
-    if (!json.orders || !Array.isArray(json.orders)) {
+    if (!orderJson.orders || !Array.isArray(orderJson.orders)) {
       return res.status(404).json({ success: false, error: '注文リストが見つかりません。' });
     }
 
-    const index = json.orders.findIndex(o => o.id_order === id_order);
+    const index = orderJson.orders.findIndex(o => o.id_order === id_order);
     if (index === -1) {
       return res.status(404).json({ success: false, error: '注文が見つかりません。' });
     }
 
-    const order = json.orders[index];
+    const order = orderJson.orders[index];
     const previousStatus = order.status;
-    json.orders[index].status = status;
 
-    // escreve o arquivo de pedidos (await garante conclusão antes de responder)
-    await fsPromises.writeFile(orderPath, JSON.stringify(json, null, 2), 'utf-8');
+    // ===== 更新 =====
+    orderJson.orders[index].status = status;
 
-    // Se for cancelamento, devolve estoque (mantendo atomicidade)
+    // バックアップを作成（安全対策）
+    await fsPromises.copyFile(orderPath, `${orderPath}.bak`);
+
+    // 注文データを保存
+    await fsPromises.writeFile(orderPath, JSON.stringify(orderJson, null, 2), 'utf-8');
+
+    // ===== キャンセル時の在庫戻し =====
     if (status === "e" && previousStatus !== "e") {
       try {
         const cakeData = await fsPromises.readFile(cakePath, 'utf-8');
         const cakeJson = JSON.parse(cakeData);
 
-        order.cakes.forEach(orderCake => {
-          const cakeInStock = cakeJson.cakes.find(c => c.name === orderCake.name);
-          if (cakeInStock && Array.isArray(cakeInStock.sizes)) {
-            const sizeItem = cakeInStock.sizes.find(s => s.size === orderCake.size);
-            if (sizeItem) {
-              sizeItem.stock = Number(sizeItem.stock || 0) + Number(orderCake.amount || 0);
+        if (!cakeJson.cakes || !Array.isArray(cakeJson.cakes)) {
+          console.error("cake.jsonの形式が不正です。");
+        } else {
+          for (const orderCake of order.cakes || []) {
+            const cakeInStock = cakeJson.cakes.find(c => c.name === orderCake.name);
+            if (cakeInStock && Array.isArray(cakeInStock.sizes)) {
+              const sizeItem = cakeInStock.sizes.find(s => s.size === orderCake.size);
+              if (sizeItem) {
+                sizeItem.stock = Number(sizeItem.stock || 0) + Number(orderCake.amount || 0);
+              }
             }
           }
-        });
 
-        await fsPromises.writeFile(cakePath, JSON.stringify(cakeJson, null, 2), 'utf-8');
+          // バックアップを作成
+          await fsPromises.copyFile(cakePath, `${cakePath}.bak`);
+          // 保存
+          await fsPromises.writeFile(cakePath, JSON.stringify(cakeJson, null, 2), 'utf-8');
+        }
       } catch (err) {
         console.error("cake.jsonの更新エラー:", err);
-        // não falha a requisição principal por causa do estoque, mas logue.
+        // ここではエラーを返さず、ログのみにする（注文データは維持）
       }
     }
 
-    // responde somente depois de tudo salvo
-    res.json({ success: true, order: json.orders[index] });
+    // ===== 正常応答 =====
+    res.json({
+      success: true,
+      message: "ステータスが正常に更新されました。",
+      order: orderJson.orders[index],
+    });
 
   } catch (err) {
     console.error("PUT /api/reservar/:id_order エラー:", err);
-    res.status(500).json({ success: false, error: err.message });
+    res.status(500).json({
+      success: false,
+      error: `サーバーエラー: ${err.message || '注文データを更新できませんでした。'}`,
+    });
   } finally {
-    release(); // libera o lock
+    release(); // ロック解除
   }
 });
+
 
 
 // app.put('/api/reservar/:id_order', (req, res) => {
