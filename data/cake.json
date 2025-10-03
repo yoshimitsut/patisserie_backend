@@ -6,19 +6,21 @@
       "sizes": [
         {
           "size": "４号",
-          "price": 3700
+          "price": 3700,
+          "stock": 0
         },
         {
           "size": "５号",
-          "price": 4600
+          "price": 4600,
+          "stock": 5
         },
         {
           "size": "６号",
-          "price": 5600
+          "price": 5600,
+          "stock": 5
         }
       ],
       "description": "苺との相性を考えたシェフこだわりの北海道産生クリームを使用。イチゴを贅沢に２段サンドした王道のショートケーキ。",
-      "stock": 1,
       "image": "../image/ノエルフレーズ.jpg"
     },
     {
@@ -27,18 +29,21 @@
       "sizes": [
         {
           "size": "４号",
-          "price": 3900
+          "price": 3900,
+          "stock": 5
         },
         {
           "size": "５号",
-          "price": 4800
+          "price": 4800,
+          "stock": 5
         },
         {
           "size": "６号",
-          "price": 5800
+          "price": 5800,
+          "stock": 5
         }
       ],
-      "stock": 0,
+      "stock": 1,
       "description": "苺との相性を考えたシェフこだわりの北海道産生クリームを使用。イチゴを贅沢に２段サンドした王道のショートケーキ。",
       "image": "../image/ノエルショコラ.jpg"
     },
@@ -48,10 +53,11 @@
       "sizes": [
         {
           "size": "15cm",
-          "price": 4800
+          "price": 4800,
+          "stock": 5
         }
       ],
-      "stock": 2,
+      "stock": 0,
       "description": "苺との相性を考えたシェフこだわりの北海道産生クリームを使用。イチゴを贅沢に２段サンドした王道のショートケーキ。",
       "image": "../image/パリブレストピスターシュ.jpg"
     },
@@ -61,10 +67,11 @@
       "sizes": [
         {
           "size": "16cm x 11cm",
-          "price": 4600
+          "price": 4600,
+          "stock": 5
         }
       ],
-      "stock": 0,
+      "stock": 6,
       "description": "苺との相性を考えたシェフこだわりの北海道産生クリームを使用。イチゴを贅沢に２段サンドした王道のショートケーキ。",
       "image": "../image/フェデルタ.jpg"
     },
@@ -74,11 +81,13 @@
       "sizes": [
         {
           "size": "16cm x 11cm",
-          "price": 4600
+          "price": 4600,
+          "stock": 5
         },
         {
           "size": "14cm x 14cm",
-          "price": 5000
+          "price": 5000,
+          "stock": 5
         }
       ],
       "stock": 5,
@@ -91,10 +100,11 @@
       "sizes": [
         {
           "size": "17cm",
-          "price": 3200
+          "price": 3200,
+          "stock": 5
         }
       ],
-      "stock": 5,
+      "stock": 6,
       "description": "苺との相性を考えたシェフこだわりの北海道産生クリームを使用。イチゴを贅沢に２段サンドした王道のショートケーキ。",
       "image": "../image/クリスマスロール.jpg"
     }

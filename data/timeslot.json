@@ -4,7 +4,7 @@
     "slots": [
       {
         "time": "11 ~ 13時",
-        "limit": 3
+        "limit": 13
       },
       {
         "time": "13 ~ 17時",
@@ -21,7 +21,7 @@
     "slots": [
       {
         "time": "11 ~ 13時",
-        "limit": 0
+        "limit": 10
       },
       {
         "time": "13 ~ 17時",
@@ -29,7 +29,7 @@
       },
       {
         "time": "17 ~ 19時",
-        "limit": 0
+        "limit": 10
       }
     ]
   },
@@ -38,15 +38,15 @@
     "slots": [
       {
         "time": "11 ~ 13時",
-        "limit": 0
+        "limit": 10
       },
       {
         "time": "13 ~ 17時",
-        "limit": 1
+        "limit": 10
       },
       {
         "time": "17 ~ 19時",
-        "limit": 2
+        "limit": 10
       }
     ]
   },
@@ -55,15 +55,15 @@
     "slots": [
       {
         "time": "11 ~ 13時",
-        "limit": 0
+        "limit": 10
       },
       {
         "time": "13 ~ 17時",
-        "limit": 0
+        "limit": 10
       },
       {
         "time": "17 ~ 19時",
-        "limit": 0
+        "limit": 10
       }
     ]
   },
@@ -72,15 +72,15 @@
     "slots": [
       {
         "time": "11 ~ 13時",
-        "limit": 0
+        "limit": 10
       },
       {
         "time": "13 ~ 17時",
-        "limit": 0
+        "limit": 10
       },
       {
         "time": "17 ~ 19時",
-        "limit": 0
+        "limit": 10
       }
     ]
   }

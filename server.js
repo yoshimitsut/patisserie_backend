@@ -184,11 +184,18 @@ app.post('/api/reservar', async (req, res) => {
     const cakesJson = JSON.parse(cakeData);
 
     newOrder.cakes.forEach(orderCake => {
-      const cake = cakesJson.cakes.find(c => c.name === orderCake.name);
-      if (cake) {
-        cake.stock = Math.max(0, cake.stock - Number(orderCake.amount || 0));
+    const cake = cakesJson.cakes.find(c => c.name === orderCake.name);
+    if (cake && Array.isArray(cake.sizes)) {
+      const sizeItem = cake.sizes.find(s => s.size === orderCake.size);
+      if (sizeItem) {
+        sizeItem.stock = Math.max(0, (Number(sizeItem.stock) || 0) - Number(orderCake.amount || 0));
+      } else {
+        console.warn(`⚠️ Estoque insuficiente para ${cake.name} - ${sizeItem.size}`);
+        sizeItem.stock = 0;
       }
-    });
+    }
+  });
+
 
     fs.writeFileSync(cakePath, JSON.stringify(cakesJson, null, 2));
 
@@ -404,36 +411,42 @@ app.put('/api/reservar/:id_order', (req, res) => {
     fs.writeFile(orderPath, JSON.stringify(json, null, 2), (err) => {
       if (err) return res.status(500).json({error: 'Erro ao salvar arquivo.'});
 
-      if(status === "e" && previousStatus !== "e"){
-        fs.readFile(cakePath, 'utf-8', (err,cakeData) => {
+      if (status === "e" && previousStatus !== "e") {
+        fs.readFile(cakePath, 'utf-8', (err, cakeData) => {
           if (err) {
             console.error("Erro ao ler cake.json:", err);
             return res.json({ success: true, order });
           }
-          
+
           let cakeJson;
           try {
             cakeJson = JSON.parse(cakeData);
-          } catch(error) {
-            console.log("cake.json inválido: ", error);
+          } catch (error) {
+            console.error("cake.json inválido:", error);
             return res.json({ success: true, order });
           }
-          
+
           order.cakes.forEach(orderCake => {
-            const cakeInStock = cakeJson.cakes.find(c => c.id_cake === orderCake.id_cake);
-            if (cakeInStock) {
-              cakeInStock.stock = (Number(cakeInStock.stock) || 0) + Number(orderCake.amount);
+            const cakeInStock = cakeJson.cakes.find(c => c.name === orderCake.name);
+            if (cakeInStock && Array.isArray(cakeInStock.sizes)) {
+              const sizeItem = cakeInStock.sizes.find(s => s.size === orderCake.size);
+              if (sizeItem) {
+                const currentStock = Number(sizeItem.stock) || 0;
+                const addAmount = Number(orderCake.amount) || 0;
+                sizeItem.stock = currentStock + addAmount;
+              }
             }
           });
-          
+
           fs.writeFile(cakePath, JSON.stringify(cakeJson, null, 2), (err) => {
-            if(err) console.error("Erro ao atualizar estoque:", err);
-            res.json({success: true, order});
+            if (err) console.error("Erro ao atualizar estoque:", err);
+            res.json({ success: true, order });
           });
         });
       } else {
-        res.json({success: true, order});
+        res.json({ success: true, order });
       }
+
 
       // res.json({success: true, order: json.orders[index]})
     })
